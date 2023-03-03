@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	
 	"project-intern-bcc/src/business/repository"
 	"project-intern-bcc/src/business/usecase"
 	"project-intern-bcc/src/handler/rest"
@@ -9,14 +9,13 @@ import (
 	"project-intern-bcc/src/lib/database/sql"
 	"project-intern-bcc/src/lib/storage"
 
-	"github.com/joho/godotenv"
 )
 
 func init(){
-	err:=godotenv.Load()
-	if err!=nil{
-		log.Panic("Error loading .env file")
-	}
+	// err:=godotenv.Load()
+	// if err!=nil{
+	// 	log.Panic("Error loading .env file")
+	// }
 	
 	sql.ConnectDatabase()
 	sql.SyncDatabase()
