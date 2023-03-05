@@ -9,8 +9,6 @@ import (
 )
 
 func (h *rest) GetAllSpeakers(c *gin.Context) {
-	// category:=c.Query("category")
-	// keyword:=c.Query("keyword")
 	var filter entity.FilterParam
 	err:=c.ShouldBindWith(&filter,binding.Query)
 	if err!=nil{

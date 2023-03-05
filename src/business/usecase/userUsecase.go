@@ -144,7 +144,7 @@ func (h *userUsecase) UserVerification(token string)(interface{},int,error){
 func (h *userUsecase) Login(c *gin.Context, userInput entity.UserLogin)(interface{},int,error){
 	user,err:=h.userRepository.FindByEmailUsername(userInput.EmailUsername)
 	if err!= nil{
-		return "Failed to Querying User Data",http.StatusNotFound,err
+		return "Invalid email/username or password",http.StatusNotFound,err
 	}
 
 	if user.IsActive==false{

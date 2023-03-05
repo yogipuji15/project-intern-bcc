@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"project-intern-bcc/src/business/entity"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
+	"project-intern-bcc/src/business/entity"
 	"strings"
 	"time"
 	"unicode"
@@ -40,7 +41,8 @@ func (r *rest) ErrorResponse(c *gin.Context, code int, err error, data interface
 func (r *rest) RequireAuth(c *gin.Context){
 	tokenString,err:=c.Cookie("Authorization")
 	if err != nil{
-		c.AbortWithStatus(http.StatusUnauthorized)
+		r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token is not found"),nil)
+		c.Abort()
 		return
 	}
 
@@ -54,12 +56,22 @@ func (r *rest) RequireAuth(c *gin.Context){
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if float64(time.Now().Unix()) > claims["exp"].(float64){
-			c.AbortWithStatus(http.StatusUnauthorized)
+			r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token has expired"),nil)
+			c.Abort()
+			return
+		}
+		
+		if user,statusCode,err:=r.uc.User.GetById(claims["id"]);err!=nil{
+			r.ErrorResponse(c,statusCode,err,user)
+			c.Abort()
+			return
 		}
 		c.Set("user",claims["id"])
 		c.Next()
 	} else {
-		c.AbortWithStatus(http.StatusUnauthorized)
+		r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token is invalid"),nil)
+		c.Abort()
+		return
 	}
 }
 

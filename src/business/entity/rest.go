@@ -2,6 +2,7 @@ package entity
 
 import (
 	"math"
+
 )
 
 type Response struct {
@@ -51,4 +52,6 @@ type FilterParam struct{
 	Keyword		string	`form:"keyword" json:"-" gorm:"-"`
 	Category	string	`form:"category" json:"-" gorm:"-"`
 	Location	string  `form:"location" json:"-" gorm:"-"`
+	MinPrice	int  `form:"minPrice" json:"-" gorm:"-"`
+	MaxPrice	int  `form:"maxPrice" json:"-" gorm:"-"`
 }
