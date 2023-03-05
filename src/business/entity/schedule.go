@@ -8,7 +8,8 @@ import (
 type Schedules struct {
 	gorm.Model
 	Date 		datatypes.Date `gorm:"type:date" json:"date"`
-	Time 		datatypes.Time `gorm:"type:time" json:"time"`
+	TimeStart 	datatypes.Time `gorm:"type:time" json:"timeStart"`
+	TimeEnd 	datatypes.Time `gorm:"type:time" json:"timeStart"`
 	SpeakerID	uint
 	Speaker		Speakers `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }

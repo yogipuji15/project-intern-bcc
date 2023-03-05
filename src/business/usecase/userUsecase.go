@@ -93,7 +93,7 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 		CreatedAt : time.Now(),
 		UpdatedAt : time.Now(),
 	}
-	
+
 	token,err:=h.auth.GenerateToken(user)
 	if err!=nil{
 		return "Failed to create token",http.StatusBadRequest,err
