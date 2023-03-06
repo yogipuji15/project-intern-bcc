@@ -58,7 +58,7 @@ func (h *reviewUsecase) CreateReview(userId uint, reviewInput entity.PostReview)
 	var totalRating float32
 	totalRating=0
 	_,err:=h.reviewRepository.GetAllBySpeakerAndUserId(userId,reviewInput.SpeakerId)
-	if err==nil{
+	if err!=nil{
 		return "Failed to create review",http.StatusBadRequest,errors.New("User have written review for this speaker"),totalRating
 	}
 	
