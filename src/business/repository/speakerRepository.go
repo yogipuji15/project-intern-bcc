@@ -9,6 +9,7 @@ import (
 type SpeakerRepository interface {
 	FindAll(filter entity.FilterParam, pagination entity.Pagination)([]entity.Speakers,*entity.Pagination,error)
 	GetById(id string) (entity.Speakers,error)
+	UpdateRating(speaker entity.Speakers) (error)
 }
 
 type speakerRepository struct {
@@ -47,4 +48,9 @@ func (h *speakerRepository) GetById(id string) (entity.Speakers,error){
 	err:=h.db.Preload("Category").Where("id = ?", id).First(&speaker).Error
 	
 	return speaker,err
+}
+
+func (h *speakerRepository) UpdateRating(speaker entity.Speakers) (error){
+	err:=h.db.Save(&speaker).Error
+	return err
 }

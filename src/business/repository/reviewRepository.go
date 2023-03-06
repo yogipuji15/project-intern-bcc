@@ -7,7 +7,10 @@ import (
 )
 
 type ReviewRepository interface {
-	GetByUserId(id string, pagination entity.Pagination)([]entity.Reviews,*entity.Pagination,error)
+	GetBySpeakerId(id string, pagination entity.Pagination)([]entity.Reviews,*entity.Pagination,error)
+	Create(review entity.Reviews)(entity.Reviews,error)
+	GetAll(id uint)([]entity.Reviews,error)
+	GetAllBySpeakerAndUserId(userId uint, speakerId uint)(entity.Reviews,error)
 }
 
 type reviewRepository struct {
@@ -18,7 +21,7 @@ func NewReviewRepository(db *gorm.DB) ReviewRepository {
 	return &reviewRepository{db:db}
 }
 
-func (h *reviewRepository) GetByUserId(id string, pagination entity.Pagination)([]entity.Reviews,*entity.Pagination,error){
+func (h *reviewRepository) GetBySpeakerId(id string, pagination entity.Pagination)([]entity.Reviews,*entity.Pagination,error){
 	pg:= entity.FormatPaginationParam(pagination)
 
 	var reviews []entity.Reviews
@@ -35,4 +38,27 @@ func (h *reviewRepository) GetByUserId(id string, pagination entity.Pagination)(
 	pg.ProcessPagination(int64(len(reviews)))
 
 	return reviews,&pg,err
+}
+
+func (h *reviewRepository) GetAll(id uint)([]entity.Reviews,error){
+	var reviews []entity.Reviews
+	err:= h.db.Where("speaker_id = ?", id).Find(&reviews).Error
+	if err!=nil{
+		return nil,err
+	}
+	return reviews,nil
+}
+
+func (h *reviewRepository) Create(review entity.Reviews)(entity.Reviews,error){
+	err:=h.db.Create(&review).Error
+	return review,err
+}
+
+func (h *reviewRepository) GetAllBySpeakerAndUserId(userId uint, speakerId uint)(entity.Reviews,error){
+	var reviews entity.Reviews
+	err:= h.db.Where("speaker_id = ? AND user_id = ?", speakerId,userId).First(&reviews).Error
+	if err!=nil{
+		return reviews,err
+	}
+	return reviews,nil
 }

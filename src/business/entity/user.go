@@ -25,6 +25,7 @@ type UserResponse struct {
 	Fullname string `json:"fullname"`
 	Address  string `json:"address"`
 	Phone	 string	`json:"phone"`
+	Role	 string `json:"role"`
 }
 
 type UserSignup struct {

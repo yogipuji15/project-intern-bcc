@@ -20,7 +20,7 @@ type UserUsecase interface {
 	Login(c *gin.Context, userInput entity.UserLogin) (interface{},int,error)
 	UploadFile(c *gin.Context,file *multipart.FileHeader) (interface{},int,error)
 	UserVerification(token string)(interface{},int,error)
-	GetById(id any) (interface{},int,error)
+	GetById(id any) (entity.UserResponse,int,error)
 	ConvertToUserResponse(user entity.Users) (entity.UserResponse)
 }
 
@@ -179,18 +179,24 @@ func (h *userUsecase) UploadFile(c *gin.Context,file *multipart.FileHeader) (int
 	return link, http.StatusOK,nil
 }
 
-func (h *userUsecase) GetById(id any) (interface{},int,error){
+func (h *userUsecase) GetById(id any) (entity.UserResponse,int,error){
 	user,err:=h.userRepository.FindById(id)
-	if err!=nil{
-		return "Failed to qurying user's data",http.StatusNotFound,err
-	}
 	
 	userResponse:= h.ConvertToUserResponse(user)
+	if err!=nil{
+		return userResponse,http.StatusNotFound,err
+	}
 	
 	return userResponse,http.StatusOK,nil
 }
 
 func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserResponse){
+	var Role string
+	if user.RoleID==0{
+		Role="Free user"
+	}else if user.RoleID==1{
+		Role="Premium user"
+	}
 	return entity.UserResponse{
 		ID 		 : user.ID,
 		Email 	 : user.Email,
@@ -198,5 +204,6 @@ func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserRespo
 		Fullname : user.Fullname,
 		Address  : user.Address,
 		Phone	 : user.Phone,
+		Role	 : Role,
 	}
 }

@@ -33,6 +33,12 @@ func (a *auth) GenerateToken(user entity.Users) (UserAuthInfo, error) {
 		"exp":time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 	
+	Role:=""
+	if user.RoleID==0{
+		Role="Free user"
+	}else if user.RoleID==1{
+		Role="Premium user"
+	}
 	userResponse:=entity.UserResponse{
 		ID		 : user.ID,
 		Email	 : user.Email,
@@ -40,6 +46,7 @@ func (a *auth) GenerateToken(user entity.Users) (UserAuthInfo, error) {
 		Fullname : user.Fullname,
 		Phone	 : user.Phone ,
 		Address  : user.Address,
+		Role	 : Role,
 	}
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRETTOKEN")))
 	userAuth := UserAuthInfo{

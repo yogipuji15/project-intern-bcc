@@ -27,3 +27,9 @@ type ReviewResponse struct{
 	Date 		datatypes.Date ` json:"date"`
 	Username	string ` json:"username"`
 }
+
+type PostReview struct{
+	Review 		string `json:"review" binding:"required"`
+	Star 		int `json:"star" binding:"required"`
+	SpeakerId   uint `json:"speakerId" binding:"required"`
+}

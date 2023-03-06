@@ -75,7 +75,7 @@ func (h *rest) GetUserById(c *gin.Context){
 
 	result,statusCode,err:=h.uc.User.GetById(id)
 	if err!=nil{
-		h.ErrorResponse(c,statusCode,err,result)
+		h.ErrorResponse(c,statusCode,err,"User is not found")
 		return
 	}
 
