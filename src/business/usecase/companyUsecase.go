@@ -7,7 +7,8 @@ import (
 )
 
 type CompanyUsecase interface {
-	FindAll(category string, keyword string, pagination entity.Pagination)(interface{},int,error)
+	FindAll(filter entity.FilterParam, pagination entity.Pagination)(interface{},int,error)
+	GetById(companyId string)(interface{},int,error)
 }
 
 type companyUsecase struct {
@@ -20,8 +21,8 @@ func NewCompanyUsecase(r repository.CompanyRepository) CompanyUsecase {
 	}
 }
 
-func (h *companyUsecase) FindAll(category string, keyword string, pagination entity.Pagination)(interface{},int,error){
-	companies,pg,err:=h.companyRepository.FindAll(category,keyword, pagination)
+func (h *companyUsecase) FindAll(filter entity.FilterParam, pagination entity.Pagination)(interface{},int,error){
+	companies,pg,err:=h.companyRepository.FindAll(filter, pagination)
 	if err!=nil{
 		return "Failed to Querying sponsor companies Data",http.StatusNotFound,err
 	}
@@ -32,4 +33,13 @@ func (h *companyUsecase) FindAll(category string, keyword string, pagination ent
 	}
 
 	return result,http.StatusOK,nil
+}
+
+func (h *companyUsecase) GetById(companyId string)(interface{},int,error){
+	company,err:=h.companyRepository.GetById(companyId)
+	if err!=nil{
+		return "Failed to querying sponsor's details data",http.StatusNotFound,err
+	}
+
+	return company,http.StatusOK,err
 }

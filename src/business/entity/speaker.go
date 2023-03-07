@@ -12,6 +12,7 @@ type Speakers struct {
 	Photo 			string 	  `gorm:"type:varchar(255)" json:"photo"`
 	Location 		string 	  `gorm:"type:varchar(255)" json:"location"`
 	Email			string    `gorm:"type:varchar(50);unique" json:"email"`
+	Portfolio		string 	  `gorm:"type:varchar(255)" json:"portfolio"`
 	CategoryID		uint
 	Category 		Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }

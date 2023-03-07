@@ -58,6 +58,7 @@ func (r *rest) Register() {
 		user.GET("/search-sponsors",r.GetAllSponsors)
 		user.GET("/speaker-details/:id",r.GetSpeakerById)
 		user.GET("/speaker-details/reviews/:id",r.GetReviewsByUserId)
+		user.GET("/sponsor-details/:id",r.GetCompanyById)
 		user.POST("/create-review",r.RequireAuth,r.PostReview)
 		user.GET("/profile",r.RequireAuth,r.GetUserById)
 	}

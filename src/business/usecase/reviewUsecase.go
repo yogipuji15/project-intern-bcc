@@ -61,7 +61,6 @@ func (h *reviewUsecase) CreateReview(userId uint, reviewInput entity.PostReview)
 	if err==nil{
 		return "Failed to create review",http.StatusBadRequest,errors.New("User have written review for this speaker"),totalRating
 	}
-	
 
 	review := entity.Reviews{
 		Review 		: reviewInput.Review, 
