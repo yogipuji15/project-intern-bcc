@@ -10,9 +10,9 @@ type Orders struct {
 	gorm.Model
 	OrderCode string `gorm:"type:varchar(255);unique" json:"orderCode"`
 	EventName string `gorm:"type:varchar(255)" json:"eventName"`
-	Status bool `gorm:"type:bool;default:null" json:"status"`
-	BookTimeStart time.Time `gorm:"type:date" json:"bookTimeStart"`
-	BookTimeEnd time.Time `gorm:"type:date" json:"bookTimeEnd"`
+	Status string `gorm:"type:varchar(255)" json:"status"`
+	BookTimeStart time.Time `json:"bookTimeStart"`
+	BookTimeEnd time.Time `json:"bookTimeEnd"`
 	Description string `gorm:"longtext" json:"description"`
 	Duration int `json:"duration"`
 	TotalPrice int `gorm:"type:int" json:"totalPrice"`
@@ -48,7 +48,7 @@ type MidtransTransactionResponse struct{
 type OrderResponse struct{
 	OrderCode 		string `json:"orderCode"`
 	EventName 		string `json:"eventName"`
-	Status 			bool `json:"status"`
+	Status 			string `json:"status"`
 	BookTimeStart 	time.Time `json:"bookTimeStart"`
 	BookTimeEnd 	time.Time `json:"bookTimeEnd"`
 	Description 	string `json:"description"`

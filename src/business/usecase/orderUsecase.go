@@ -46,6 +46,12 @@ func (h *orderUsecase) CreateTransaction(speaker entity.Speakers, user entity.Us
 		return "Failed to parsing time",http.StatusBadRequest,err
 	}
 	
+	var status string
+	if user.Role=="premium-user"{
+		status="Waiting For Payment"
+	}else{
+		status="Waiting To Approve"
+	}
 	order:=entity.Orders{
 		OrderCode 		:orderId,
 		EventName 		:orderInput.EventName,
@@ -55,14 +61,10 @@ func (h *orderUsecase) CreateTransaction(speaker entity.Speakers, user entity.Us
 		Duration 		:orderInput.Duration,
 		TotalPrice  	:speaker.Price*orderInput.Duration,
 		UserID 			:user.ID,
+		Status			:status,
 		SpeakerID 		:speaker.ID,
 		PaymentID 		:uint(paymentId),
 	}
-
-	if user.Role=="premium-user"{
-		order.Status=false
-	}
-
 	
 	order,resp,err:=h.orderRepository.Create(speaker,user,order,rundown,script)
 	if err!=nil{
@@ -114,7 +116,7 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 		return "Failed to querying order data",http.StatusNotFound,err
 	}
 
-	order.Status=true
+	order.Status="Success Payment"
 
 	err=h.orderRepository.Update(order)
 	if err!=nil{
