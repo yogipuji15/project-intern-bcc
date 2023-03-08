@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"crypto/sha512"
+	"encoding/hex"
 	"errors"
 	"mime/multipart"
 	"net/http"
@@ -113,9 +114,9 @@ func (h *orderUsecase) OrderResponse(order entity.Orders,speaker entity.Speakers
 }
 
 func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interface{},int,error){
-	mySignature:=sha512.Sum512([]byte(body.OrderID+body.StatusCode+body.GrossAmount+os.Getenv("SERVER_KEY")))
+	mySignature:=body.OrderID+body.StatusCode+body.GrossAmount+os.Getenv("SERVER_KEY")
 
-	if body.SignatureKey !=string(mySignature[:]){
+	if body.SignatureKey !=h.Hash512(mySignature){
 		return "Signature key is invalid",http.StatusUnauthorized,errors.New("Signature key is invalid")
 	}
 
@@ -134,4 +135,11 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 	}
 
 	return "Updating order status successfully",http.StatusOK,err
+}
+
+func (h *orderUsecase) Hash512(input string) string {
+	hash := sha512.New()
+	hash.Write([]byte(input))
+	pass := hex.EncodeToString(hash.Sum(nil))
+	return pass
 }
