@@ -29,6 +29,12 @@ func (m *midtransStruct) CreateTransaction(order entity.Orders,speaker entity.Sp
 
 	
 	var req *coreapi.ChargeReq
+	var bank string
+	if order.PaymentID==1{
+		bank="bca"
+	}else if order.PaymentID==2{
+		bank="bri"
+	}
 	if order.PaymentID==1||order.PaymentID==2{
 		req = &coreapi.ChargeReq{
 			PaymentType: "bank_transfer",
@@ -45,7 +51,7 @@ func (m *midtransStruct) CreateTransaction(order entity.Orders,speaker entity.Sp
 				},
 			},
 			BankTransfer: &coreapi.BankTransferDetails{
-				Bank: "bca",
+				Bank: midtrans.Bank(bank),
 			},
 		}
 		
