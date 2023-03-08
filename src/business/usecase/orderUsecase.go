@@ -17,7 +17,7 @@ import (
 
 type OrderUsecase interface {
 	CreateTransaction(speaker entity.Speakers, user entity.UserResponse,orderInput entity.OrderInput,rundown *multipart.FileHeader,script *multipart.FileHeader) (interface{},int,error)
-	UpdateOrderStatus(body entity.CheckTransaction) (interface{},int,error)
+	UpdateOrderStatus(body entity.CheckTransaction) (interface{},entity.Orders,int,error)
 }
 
 type orderUsecase struct {
@@ -113,16 +113,18 @@ func (h *orderUsecase) OrderResponse(order entity.Orders,speaker entity.Speakers
 	}
 }
 
-func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interface{},int,error){
+func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interface{},entity.Orders,int,error){
+	var order entity.Orders
+	
 	mySignature:=body.OrderID+body.StatusCode+body.GrossAmount+os.Getenv("SERVER_KEY")
 
 	if body.SignatureKey !=h.Hash512(mySignature){
-		return "Signature key is invalid",http.StatusUnauthorized,errors.New("Signature key is invalid")
+		return "Signature key is invalid",order,http.StatusUnauthorized,errors.New("Signature key is invalid")
 	}
 
 	order,err:=h.orderRepository.FindByOrderCode(body.OrderID)
 	if err!=nil{
-		return "Failed to querying order data",http.StatusNotFound,err
+		return "Failed to querying order data",order,http.StatusNotFound,err
 	}
 
 	if body.TransactionStatus=="settlement"{
@@ -131,10 +133,10 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 
 	err=h.orderRepository.Update(order)
 	if err!=nil{
-		return "Failed to update order's status data",http.StatusInternalServerError,err
+		return "Failed to update order's status data",order,http.StatusInternalServerError,err
 	}
 
-	return "Updating order status successfully",http.StatusOK,err
+	return "Updating order status successfully",order,http.StatusOK,err
 }
 
 func (h *orderUsecase) Hash512(input string) string {

@@ -1,15 +1,14 @@
 package entity
 
 import (
-	"gorm.io/datatypes"
+	"time"
 	"gorm.io/gorm"
 )
 
 type Schedules struct {
 	gorm.Model
-	Date 		datatypes.Date `gorm:"type:date" json:"date"`
-	TimeStart 	datatypes.Time `gorm:"type:time" json:"timeStart"`
-	TimeEnd 	datatypes.Time `gorm:"type:time" json:"timeStart"`
+	TimeStart 	time.Time `json:"timeStart"`
+	TimeEnd 	time.Time `json:"timeStart"`
 	SpeakerID	uint
 	Speaker		Speakers `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
