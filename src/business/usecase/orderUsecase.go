@@ -122,7 +122,7 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 		return "Failed to querying order data",http.StatusNotFound,err
 	}
 
-	if order.Status=="settlement"{
+	if body.TransactionStatus=="settlement"{
 		order.Status="Success Payment"
 	}
 
