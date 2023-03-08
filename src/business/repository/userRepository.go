@@ -43,13 +43,13 @@ func (h *userRepository) Update(user entity.Users)(error){
 
 func (h *userRepository) FindByEmailUsername(emailUsername string)(entity.Users,error){
 	var user entity.Users
-	err:=h.db.Where("email = ?", emailUsername).Or("username = ?", emailUsername).First(&user).Error
+	err:=h.db.Preload("Role").Where("email = ?", emailUsername).Or("username = ?", emailUsername).First(&user).Error
 	return user,err
 }
 
 func (h *userRepository) FindByEmail(email string)(entity.Users,error){
 	var user entity.Users
-	err:=h.db.Where("email = ?", email).First(&user).Error
+	err:=h.db.Preload("Role").Where("email = ?", email).First(&user).Error
 	return user,err
 }
 
@@ -60,12 +60,12 @@ func (h *userRepository) Delete(user entity.Users)(error){
 
 func (h *userRepository) FindUserByToken(token string)(entity.Users,error){
 	var user entity.Users
-	err:=h.db.First(&user, "verification_code=?",token).Error
+	err:=h.db.Preload("Role").First(&user, "verification_code=?",token).Error
 	return user,err
 }
 
 func (h *userRepository) FindById(id any)(entity.Users,error){
 	var user entity.Users
-	err:=h.db.First(&user, "id=?",id).Error
+	err:=h.db.Preload("Role").First(&user, "id=?",id).Error
 	return user,err
 }

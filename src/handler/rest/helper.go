@@ -11,6 +11,7 @@ import (
 	"unicode"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -130,4 +131,8 @@ func verifyPassword(password string) error {
 		return fmt.Errorf(errorString)
 	}
 	return nil
+}
+
+func (h *rest) BindBody(ctx *gin.Context, body interface{}) error { 
+	return ctx.ShouldBindWith(body, binding.Default(ctx.Request.Method, ctx.ContentType())) 
 }

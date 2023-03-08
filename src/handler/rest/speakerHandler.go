@@ -36,7 +36,7 @@ func (h *rest) GetSpeakerById(c *gin.Context){
 
 	result, statusCode, err:= h.uc.Speaker.GetById(speakerId)
 	if err!=nil{
-		h.ErrorResponse(c,statusCode,err,result)
+		h.ErrorResponse(c,statusCode,err,"Failed to querying speaker's data")
 		return 
 	}
 	h.SuccessResponse(c, statusCode,"Querying Speakers data details successfully", result)

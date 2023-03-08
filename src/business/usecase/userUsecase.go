@@ -186,17 +186,11 @@ func (h *userUsecase) GetById(id any) (entity.UserResponse,int,error){
 	if err!=nil{
 		return userResponse,http.StatusNotFound,err
 	}
-	
+
 	return userResponse,http.StatusOK,nil
 }
 
 func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserResponse){
-	var Role string
-	if user.RoleID==0{
-		Role="Free user"
-	}else if user.RoleID==1{
-		Role="Premium user"
-	}
 	return entity.UserResponse{
 		ID 		 : user.ID,
 		Email 	 : user.Email,
@@ -204,6 +198,6 @@ func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserRespo
 		Fullname : user.Fullname,
 		Address  : user.Address,
 		Phone	 : user.Phone,
-		Role	 : Role,
+		Role	 : user.Role.Role,
 	}
 }

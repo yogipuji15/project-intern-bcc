@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type Speakers struct {
 	gorm.Model
 	Name 			string    `gorm:"type:varchar(255)" json:"title"`
-	Description 	string 	  `gorm:"type:varchar(255)" json:"description"`
+	Description 	string 	  `gorm:"type:longtext" json:"description"`
 	Price 			int       `gorm:"type:int" json:"price"`
 	Rating 			float32   `gorm:"type:float" json:"rating"`
 	TotalReviews 	int       `gorm:"type:int" json:"totalReviews"`

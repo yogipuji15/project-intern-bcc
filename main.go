@@ -6,6 +6,7 @@ import (
 	"project-intern-bcc/src/handler/rest"
 	"project-intern-bcc/src/lib/auth"
 	"project-intern-bcc/src/lib/database/sql"
+	"project-intern-bcc/src/lib/midtrans"
 	"project-intern-bcc/src/lib/storage"
 
 )
@@ -23,7 +24,8 @@ func init(){
 func main()  {
 	auth:= auth.Init()
 	storage:=storage.Init()
-	repository := repository.Init(sql.DB,storage)
+	midtrans:=midtrans.Init()
+	repository := repository.Init(sql.DB,storage,midtrans)
 	usecase := usecase.Init(storage,auth,repository)
 	rest := rest.Init(usecase)
 

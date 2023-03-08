@@ -1,8 +1,10 @@
 package repository
 
 import (
-	"gorm.io/gorm"
+	"project-intern-bcc/src/lib/midtrans"
 	"project-intern-bcc/src/lib/storage"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -20,12 +22,12 @@ type Repository struct {
 	CompanyCategory CompanyCategoryRepository
 }
 
-func Init(db *gorm.DB,storage storage.StorageInterface) *Repository {
+func Init(db *gorm.DB,storage storage.StorageInterface, midtrans midtrans.MidtransInterface) *Repository {
 	return &Repository{
 		User:      NewUserRepository(db),
 		Category: NewCategoryRepository(db),
 		Company: NewCompanyRepository(db),
-		Order: NewOrderRepository(db),
+		Order: NewOrderRepository(db,storage,midtrans),
 		Payment: NewPaymentRepository(db),
 		Proposal: NewProposalRepository(db,storage),
 		Review: NewReviewRepository(db),

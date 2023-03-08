@@ -7,7 +7,7 @@ type Companies struct {
 	CompanyName 		string `gorm:"type:varchar(255);unique" json:"company"`
 	Email       		string `gorm:"type:varchar(50);unique" json:"email"`
 	Photo 				string `gorm:"type:varchar(255)" json:"photo"`
-	Description			string `gorm:"type:varchar(255)" json:"description"`
+	Description			string `gorm:"longtext" json:"description"`
 	Location 	  		string `gorm:"type:varchar(255)" json:"location"`
 	ProposalsAccepted	int `gorm:"type:int" json:"proposalsAccepted"`
 	Partner				string `gorm:"type:varchar(255)" json:"partner"`
