@@ -1,9 +1,11 @@
 package usecase
 
 import (
+	"crypto/sha512"
 	"errors"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/business/repository"
 	"time"
@@ -111,6 +113,12 @@ func (h *orderUsecase) OrderResponse(order entity.Orders,speaker entity.Speakers
 }
 
 func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interface{},int,error){
+	mySignature:=sha512.Sum512([]byte(body.OrderID+body.StatusCode+body.GrossAmount+os.Getenv("SERVER_KEY")))
+
+	if body.SignatureKey !=string(mySignature[:]){
+		return "Signature key is invalid",http.StatusUnauthorized,errors.New("Signature key is invalid")
+	}
+
 	order,err:=h.orderRepository.FindByOrderCode(body.OrderID)
 	if err!=nil{
 		return "Failed to querying order data",http.StatusNotFound,err
