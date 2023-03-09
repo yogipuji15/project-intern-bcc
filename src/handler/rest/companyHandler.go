@@ -39,7 +39,7 @@ func (h *rest) GetCompanyById(c *gin.Context) {
 
 	result, statusCode, err:= h.uc.Company.GetById(companyId)
 	if err!=nil{
-		h.ErrorResponse(c,statusCode,err,result)
+		h.ErrorResponse(c,statusCode,err,"Failed to querying sponsor's details data")
 		return 
 	}
 	h.SuccessResponse(c, statusCode,"Querying sponsors data details successfully", result)

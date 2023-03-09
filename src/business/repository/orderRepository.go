@@ -15,6 +15,7 @@ type OrderRepository interface {
 	Create(speaker entity.Speakers,user entity.UserResponse,order entity.Orders,rundown *multipart.FileHeader,script *multipart.FileHeader)(entity.Orders,*coreapi.ChargeResponse,error)
 	FindByOrderCode(orderCode string)(entity.Orders,error)
 	Update(order entity.Orders)(error)
+	FindAll(userId any, pagination entity.Pagination)([]entity.Orders,*entity.Pagination,error)
 }
 
 type orderRepository struct {
@@ -68,4 +69,23 @@ func (h *orderRepository) FindByOrderCode(orderCode string)(entity.Orders,error)
 	var order entity.Orders
 	err:=h.db.First(&order, "order_code=?",orderCode).Error
 	return order,err
+}
+
+func (h *orderRepository) FindAll(userId any, pagination entity.Pagination)([]entity.Orders,*entity.Pagination,error){
+	pg:= entity.FormatPaginationParam(pagination)
+
+	var orders []entity.Orders
+	err:= h.db.Preload("Speaker").Where("user_id = ?",userId).Offset(int(pg.Offset)).Limit(int(pg.Limit)).Find(&orders).Error
+	if err!=nil{
+		return nil,nil,err
+	}
+
+	err = h.db.Model(&orders).Preload("Speaker").Where("user_id = ?",userId).Count(&pg.TotalElement).Error
+	if err!=nil{
+		return nil,nil,err
+	}
+
+	pg.ProcessPagination(int64(len(orders)))
+
+	return orders,&pg,err
 }

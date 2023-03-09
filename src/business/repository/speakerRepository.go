@@ -33,7 +33,7 @@ func (h *speakerRepository) FindAll(filter entity.FilterParam, pagination entity
 		return nil,nil,err
 	}
 
-	err = h.db.Order("rating desc").Model(&speakers).Joins("Category", h.db.Where(&entity.Categories{Category: filter.Category})).Where("name LIKE ? AND location LIKE ?", "%"+filter.Keyword+"%", "%"+filter.Location+"%").Count(&pg.TotalElement).Error
+	err = h.db.Order("rating desc").Model(&speakers).Joins("Category", h.db.Where(&entity.Categories{Category: filter.Category})).Where("name LIKE ? AND location LIKE ? AND price BETWEEN ? AND ?", "%"+filter.Keyword+"%", "%"+filter.Location+"%",filter.MinPrice,maxPrice).Count(&pg.TotalElement).Error
 	if err!=nil{
 		return nil,nil,err
 	}

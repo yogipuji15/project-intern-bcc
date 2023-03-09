@@ -1,6 +1,7 @@
 package repository
 
 import (
+
 	"gorm.io/gorm"
 )
 
@@ -14,3 +15,4 @@ type companyCategoryRepository struct {
 func NewCompanyCategoryRepository(db *gorm.DB) CompanyCategoryRepository {
 	return &companyCategoryRepository{db:db}
 }
+

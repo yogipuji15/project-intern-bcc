@@ -27,12 +27,12 @@ type Orders struct {
 }
 
 type OrderInput struct{
-	EventName string `form:"eventName" `
-	Description string `form:"description" `
-	PaymentType string `form:"paymentType" `
-	Duration int `form:"duration" `
-	SpeakerID int `form:"speakerId" `
-	BookTime string `form:"bookTime" `
+	EventName string `form:"eventName" binding:"required"`
+	Description string `form:"description" binding:"required"`
+	PaymentType string `form:"paymentType" binding:"required"`
+	Duration int `form:"duration" binding:"required,number"`
+	SpeakerID int `form:"speakerId" binding:"required,number"`
+	BookTime string `form:"bookTime" binding:"required"`
 }
 
 type MidtransTransactionResponse struct{
@@ -64,4 +64,9 @@ type CheckTransaction struct{
 	PaymentType		  string `json:"payment_type"`
 	OrderID			  string `json:"order_id"`
 	GrossAmount		  string `json:"gross_amount"`
+}
+
+type OrderHistoryResponse struct{
+	Order 	   []Orders
+	Pagination Pagination
 }

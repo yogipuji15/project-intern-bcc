@@ -18,6 +18,7 @@ import (
 type OrderUsecase interface {
 	CreateTransaction(speaker entity.Speakers, user entity.UserResponse,orderInput entity.OrderInput,rundown *multipart.FileHeader,script *multipart.FileHeader) (interface{},int,error)
 	UpdateOrderStatus(body entity.CheckTransaction) (interface{},entity.Orders,int,error)
+	GetAllOrders(userId any, pagination entity.Pagination) (interface{},int,error)
 }
 
 type orderUsecase struct {
@@ -51,9 +52,9 @@ func (h *orderUsecase) CreateTransaction(speaker entity.Speakers, user entity.Us
 	
 	var status string
 	if user.Role=="premium-user"{
-		status="Waiting For Payment"
+		status="WAITING FOR PAYMENT"
 	}else{
-		status="Waiting To Approve"
+		status="WAITING TO APPROVE"
 	}
 	order:=entity.Orders{
 		OrderCode 		:orderId,
@@ -144,4 +145,18 @@ func (h *orderUsecase) Hash512(input string) string {
 	hash.Write([]byte(input))
 	pass := hex.EncodeToString(hash.Sum(nil))
 	return pass
+}
+
+func (h *orderUsecase) GetAllOrders(userId any, pagination entity.Pagination) (interface{},int,error){
+	order,pg,err:=h.orderRepository.FindAll(userId,pagination)
+	if err!=nil{
+		return "Failed to querying orders data",http.StatusNotFound,err
+	}
+	
+	orderResponse :=entity.OrderHistoryResponse{
+		Order: order,
+		Pagination: *pg,
+	}
+
+	return orderResponse,http.StatusOK,nil
 }

@@ -8,7 +8,7 @@ import (
 
 type CompanyUsecase interface {
 	FindAll(filter entity.FilterParam, pagination entity.Pagination)(interface{},int,error)
-	GetById(companyId string)(interface{},int,error)
+	GetById(companyId string)(entity.Companies,int,error)
 }
 
 type companyUsecase struct {
@@ -35,10 +35,10 @@ func (h *companyUsecase) FindAll(filter entity.FilterParam, pagination entity.Pa
 	return result,http.StatusOK,nil
 }
 
-func (h *companyUsecase) GetById(companyId string)(interface{},int,error){
+func (h *companyUsecase) GetById(companyId string)(entity.Companies,int,error){
 	company,err:=h.companyRepository.GetById(companyId)
 	if err!=nil{
-		return "Failed to querying sponsor's details data",http.StatusNotFound,err
+		return company,http.StatusNotFound,err
 	}
 
 	return company,http.StatusOK,err

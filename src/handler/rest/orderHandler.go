@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 func (h *rest) CreateOrder(c *gin.Context) {
@@ -75,3 +76,24 @@ func (h *rest) CheckOrderTransaction(c *gin.Context) {
 	h.SuccessResponse(c,statusCode,"Updating order status successfully",result)
 }
 
+func (h *rest) GetOrderHistory(c *gin.Context){
+	userId,exist:=c.Get("user")
+	if exist==false{
+		h.ErrorResponse(c,http.StatusUnauthorized,errors.New("User ID is not found in token"),"User ID doesn't exist")
+		return
+	}
+
+	var pagination entity.Pagination
+	err:=c.ShouldBindWith(&pagination,binding.Query)
+	if err!=nil{
+		h.ErrorResponse(c, http.StatusBadRequest,err,"Failed to read pagination parameters")
+		return
+	}
+
+	result,statusCode,err:=h.uc.Order.GetAllOrders(userId,pagination)
+	if err!=nil{
+		h.ErrorResponse(c,statusCode,err,result)
+	}
+
+	h.SuccessResponse(c,statusCode,"Querying order's history successful",result)
+}

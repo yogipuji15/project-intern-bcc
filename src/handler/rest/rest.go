@@ -51,7 +51,6 @@ func (r *rest) Register() {
 		user.POST("/signup", r.SignUp)
 		user.POST("/login", r.Login)
 		user.GET("/signup/verification",r.Verification)
-		r.gin.MaxMultipartMemory = 8 << 20
 		// user.POST("/upload",r.UploadFileSupabase)
 		user.GET("/speaker-category",r.GetAllCategories)
 		user.GET("/search-speakers",r.GetAllSpeakers)
@@ -59,8 +58,10 @@ func (r *rest) Register() {
 		user.GET("/speaker-details/:id",r.GetSpeakerById)
 		user.POST("/speaker-details/create-order",r.RequireAuth,r.CreateOrder)
 		user.POST("/midtrans/update-order-status",r.CheckOrderTransaction)
+		user.GET("/order-history",r.RequireAuth,r.GetOrderHistory)
 		user.GET("/speaker-details/reviews/:id",r.GetReviewsByUserId)
 		user.GET("/sponsor-details/:id",r.GetCompanyById)
+		user.POST("/sponsor-details/apply-proposal",r.RequireAuth,r.UploadProposal)
 		user.POST("/create-review",r.RequireAuth,r.PostReview)
 		user.GET("/profile",r.RequireAuth,r.GetUserById)
 	}
