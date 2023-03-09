@@ -65,5 +65,4 @@ func (r *rest) Register() {
 		user.POST("/create-review",r.RequireAuth,r.PostReview)
 		user.GET("/profile",r.RequireAuth,r.GetUserById)
 	}
-	
 }
