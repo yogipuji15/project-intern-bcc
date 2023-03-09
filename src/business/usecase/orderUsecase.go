@@ -101,6 +101,14 @@ func (h *orderUsecase) MidtransTransactionResponse(resp *coreapi.ChargeResponse,
 }
 
 func (h *orderUsecase) OrderResponse(order entity.Orders,speaker entity.Speakers) entity.OrderResponse{
+	var paymentType string
+	if order.PaymentID==1{
+		paymentType="Bank BCA"
+	}else if order.PaymentID==2{
+		paymentType="Bank BRI"
+	}else if order.PaymentID==3{
+		paymentType="GOPAY"
+	}
 	return entity.OrderResponse{
 		OrderCode 		:order.OrderCode,
 		EventName 		:order.EventName,
@@ -111,6 +119,7 @@ func (h *orderUsecase) OrderResponse(order entity.Orders,speaker entity.Speakers
 		Duration 		:order.Duration,
 		TotalPrice 		:order.TotalPrice,
 		Speaker 		:order.Speaker,
+		PaymentType		:paymentType,
 	}
 }
 
@@ -129,7 +138,11 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 	}
 
 	if body.TransactionStatus=="settlement"{
-		order.Status="Success Payment"
+		order.Status="SUCCESS PAYMENT"
+	}else if body.TransactionStatus=="expired"{
+		order.Status="PAYMENT FAILED"
+	}else if body.TransactionStatus=="failure"{
+		order.Status="PAYMENT FAILED"
 	}
 
 	err=h.orderRepository.Update(order)

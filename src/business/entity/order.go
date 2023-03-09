@@ -54,6 +54,7 @@ type OrderResponse struct{
 	Description 	string `json:"description"`
 	Duration 		int `json:"duration"`
 	TotalPrice 		int `json:"totalPrice"`
+	PaymentType		string `json:"paymentType"`
 	Speaker 		Speakers
 }
 
