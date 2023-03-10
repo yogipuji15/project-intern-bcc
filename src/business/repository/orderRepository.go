@@ -1,12 +1,10 @@
 package repository
 
 import (
-	"fmt"
 	"mime/multipart"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/lib/midtrans"
 	"project-intern-bcc/src/lib/storage"
-	"reflect"
 
 	"github.com/midtrans/midtrans-go/coreapi"
 	"gorm.io/gorm"
@@ -52,7 +50,6 @@ func (h *orderRepository) Create(speaker entity.Speakers,user entity.UserRespons
 	
 	if user.Role=="premium-user"{
 		resp,err:=h.midtrans.CreateTransaction(order,speaker)
-		fmt.Println(reflect.ValueOf(err).IsNil())
 		if err!=nil{
 			return order,nil,err
 		}
