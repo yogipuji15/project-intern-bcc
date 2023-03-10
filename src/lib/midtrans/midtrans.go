@@ -75,8 +75,8 @@ func (m *midtransStruct) CreateTransaction(order entity.Orders,speaker entity.Sp
 	}
 	
 	
-	resp, err := m.midtransClient.ChargeTransaction(req)
-	return resp,err
+	resp, _ := m.midtransClient.ChargeTransaction(req)
+	return resp,nil
 	
 }
 
