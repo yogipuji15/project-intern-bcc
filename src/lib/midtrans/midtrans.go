@@ -76,6 +76,7 @@ func (m *midtransStruct) CreateTransaction(order entity.Orders,speaker entity.Sp
 	
 	
 	resp, _ := m.midtransClient.ChargeTransaction(req)
+
 	return resp,nil
 	
 }

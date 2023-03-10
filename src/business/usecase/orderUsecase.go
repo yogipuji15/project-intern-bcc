@@ -182,6 +182,10 @@ func (h *orderUsecase) CreateTransactionByOrderCode(orderCode string, speaker en
 		return "Failed to querying order data",http.StatusNotFound,err
 	}
 
+	// if order.Status!="APPROVED"{
+	// 	return nil,http.StatusUnauthorized,errors.New("Wait for the speaker's approval to proceed to the payment process")
+	// }
+
 	order.Status="WAITING FOR PAYMENT"
 
 	err=h.orderRepository.Update(order)
