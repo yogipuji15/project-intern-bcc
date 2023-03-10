@@ -13,3 +13,7 @@ type PremiumOrders struct {
 	PaymentID uint
 	Payment Payments `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+
+type InputPremiumOrder struct{
+	
+}

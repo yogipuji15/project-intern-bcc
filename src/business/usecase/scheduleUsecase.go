@@ -8,6 +8,8 @@ import (
 
 type ScheduleUsecase interface {
 	Create(order entity.Orders)(interface{},int,error)
+	GetAll(speakerId string,month string)(interface{},int,error)
+	GetById(Id string)(entity.Schedules,int,error)
 }
 
 type scheduleUsecase struct {
@@ -32,6 +34,24 @@ func (h *scheduleUsecase) Create(order entity.Orders)(interface{},int,error){
 		return "Failed to create speaker's schedule",http.StatusInternalServerError,err
 	}
 
+
+	return schedule,http.StatusOK,nil
+}
+
+func (h *scheduleUsecase) GetAll(speakerId string,month string)(interface{},int,error){
+	schedules,err:=h.scheduleRepository.GetAllBySpeakerId(speakerId,month)
+	if err != nil{
+		return "Failed to querying speaker's schedules data",http.StatusNotFound,err
+	}
+	
+	return schedules,http.StatusOK,nil
+}
+
+func (h *scheduleUsecase) GetById(Id string)(entity.Schedules,int,error){
+	schedule,err:=h.scheduleRepository.GetById(Id)
+	if err!=nil{
+		return schedule,http.StatusNotFound,err
+	}
 
 	return schedule,http.StatusOK,nil
 }

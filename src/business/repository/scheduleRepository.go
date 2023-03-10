@@ -8,6 +8,8 @@ import (
 
 type ScheduleRepository interface {
 	Create(schedule entity.Schedules)(entity.Schedules,error)
+	GetAllBySpeakerId(speakerId string,month string)([]entity.Schedules,error)
+	GetById(Id string)(entity.Schedules,error)
 }
 
 type scheduleRepository struct {
@@ -20,5 +22,17 @@ func NewScheduleRepository(db *gorm.DB) ScheduleRepository {
 
 func (h *scheduleRepository) Create(schedule entity.Schedules)(entity.Schedules,error){
 	err:=h.db.Create(&schedule).Error
+	return schedule,err
+}
+
+func (h *scheduleRepository) GetAllBySpeakerId(speakerId string,month string)([]entity.Schedules,error){
+	var schedules []entity.Schedules
+	err:=h.db.Where("time_start BETWEEN ? AND ?",month+"-01 00:00:00",month+"-31 23:59:00").Find(&schedules).Error
+	return schedules,err
+}
+
+func (h *scheduleRepository) GetById(Id string)(entity.Schedules,error){
+	var schedule entity.Schedules
+	err:=h.db.Where("id = ?",Id).Find(&schedule).Error
 	return schedule,err
 }

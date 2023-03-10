@@ -76,6 +76,49 @@ func (r *rest) RequireAuth(c *gin.Context){
 	}
 }
 
+func (r *rest) PremiumRequireAuth(c *gin.Context){
+	tokenString,err:=c.Cookie("Authorization")
+	if err != nil{
+		r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token is not found"),nil)
+		c.Abort()
+		return
+	}
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(os.Getenv("SECRETTOKEN")), nil
+	})
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		if float64(time.Now().Unix()) > claims["exp"].(float64){
+			r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token has expired"),nil)
+			c.Abort()
+			return
+		}
+
+		if claims["role"] != 2{
+			r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Upgrade your account to premium to access this page"),nil)
+			c.Abort()
+			return
+		}
+		
+		if user,statusCode,err:=r.uc.User.GetById(claims["id"]);err!=nil{
+			r.ErrorResponse(c,statusCode,err,user)
+			c.Abort()
+			return
+		}
+		c.Set("user",claims["id"])
+		c.Next()
+	} else {
+		r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Token is invalid"),nil)
+		c.Abort()
+		return
+	}
+}
+
 func verifyPassword(password string) error {
 	var uppercasePresent bool
 	var lowercasePresent bool
