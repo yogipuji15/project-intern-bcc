@@ -19,6 +19,8 @@ type OrderUsecase interface {
 	CreateTransaction(speaker entity.Speakers, user entity.UserResponse,orderInput entity.OrderInput,rundown *multipart.FileHeader,script *multipart.FileHeader) (interface{},int,error)
 	UpdateOrderStatus(body entity.CheckTransaction) (interface{},entity.Orders,int,error)
 	GetAllOrders(userId any, pagination entity.Pagination) (interface{},int,error)
+	GetOrderByOrderCode(orderCode string)(entity.Orders,error)
+	CreateTransactionByOrderCode(orderCode string, speaker entity.Speakers)(interface{},int,error)
 }
 
 type orderUsecase struct {
@@ -172,4 +174,32 @@ func (h *orderUsecase) GetAllOrders(userId any, pagination entity.Pagination) (i
 	}
 
 	return orderResponse,http.StatusOK,nil
+}
+
+func (h *orderUsecase) CreateTransactionByOrderCode(orderCode string, speaker entity.Speakers)(interface{},int,error){
+	order,err:=h.orderRepository.FindByOrderCode(orderCode)
+	if err!=nil{
+		return "Failed to querying order data",http.StatusNotFound,err
+	}
+
+	order.Status="WAITING FOR PAYMENT"
+
+	err=h.orderRepository.Update(order)
+	if err!=nil{
+		return "Failed to update order's status data",http.StatusInternalServerError,err
+	}
+
+	resp,err:=h.orderRepository.CreateMidtransTransaction(order,speaker)
+	if err!=nil{
+		return "Failed to create order transaction",http.StatusInternalServerError,err
+	}
+
+	response:=h.MidtransTransactionResponse(resp,order,speaker)
+
+	return response,http.StatusOK,nil
+}
+
+func (h *orderUsecase) GetOrderByOrderCode(orderCode string)(entity.Orders,error){
+	order,err:=h.orderRepository.FindByOrderCode(orderCode)
+	return order,err
 }

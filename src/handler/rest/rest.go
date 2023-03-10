@@ -53,6 +53,7 @@ func (r *rest) Register() {
 		user.GET("/signup/verification",r.Verification)
 		// user.POST("/upload",r.UploadFileSupabase)
 		user.GET("/order-history",r.RequireAuth,r.GetOrderHistory)
+		user.POST("/order-history/pay-order",r.RequireAuth,r.CreateTransactionByOrderCode)
 		user.GET("/speaker-category",r.GetAllCategories)
 		user.GET("/search-speakers",r.GetAllSpeakers)
 		user.GET("/speaker-details/:id",r.GetSpeakerById)

@@ -16,6 +16,7 @@ type OrderRepository interface {
 	FindByOrderCode(orderCode string)(entity.Orders,error)
 	Update(order entity.Orders)(error)
 	FindAll(userId any, pagination entity.Pagination)([]entity.Orders,*entity.Pagination,error)
+	CreateMidtransTransaction(order entity.Orders,speaker entity.Speakers)(*coreapi.ChargeResponse,error)
 }
 
 type orderRepository struct {
@@ -88,4 +89,9 @@ func (h *orderRepository) FindAll(userId any, pagination entity.Pagination)([]en
 	pg.ProcessPagination(int64(len(orders)))
 
 	return orders,&pg,err
+}
+
+func (h *orderRepository)  CreateMidtransTransaction(order entity.Orders,speaker entity.Speakers)(*coreapi.ChargeResponse,error){
+	resp,err:=h.midtrans.CreateTransaction(order,speaker)
+	return resp,err
 }

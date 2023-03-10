@@ -71,3 +71,7 @@ type OrderHistoryResponse struct{
 	Order 	   []Orders
 	Pagination Pagination
 }
+
+type PayOrder struct{
+	OrderCode 	  	string `json:"orderCode"`
+}

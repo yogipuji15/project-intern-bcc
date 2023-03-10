@@ -92,3 +92,31 @@ func (h *rest) GetOrderHistory(c *gin.Context){
 
 	h.SuccessResponse(c,statusCode,"Querying order's history successful",result)
 }
+
+func (h *rest) CreateTransactionByOrderCode(c *gin.Context) {
+	var body entity.PayOrder
+	if err:=h.BindBody(c,&body);err != nil {
+		h.ErrorResponse(c, http.StatusBadRequest,err,"Failed to read body")
+		return
+	}
+
+	order,err:=h.uc.Order.GetOrderByOrderCode(body.OrderCode)
+	if err!=nil{
+		h.ErrorResponse(c,http.StatusNotFound,err,nil)
+		return
+	}
+
+	speaker,statusCode,err:=h.uc.Speaker.GetById(strconv.FormatUint(uint64(order.SpeakerID), 10))
+	if err!=nil{
+		h.ErrorResponse(c,statusCode,err,speaker)
+		return
+	}
+
+	result,statusCode,err:=h.uc.Order.CreateTransactionByOrderCode(body.OrderCode,speaker)
+	if err!=nil{
+		h.ErrorResponse(c,statusCode,err,result)
+		return
+	}
+
+	h.SuccessResponse(c,statusCode,"Create order transaction successfully",result)
+}

@@ -99,7 +99,7 @@ func (r *rest) PremiumRequireAuth(c *gin.Context){
 			return
 		}
 
-		if claims["role"] != 2{
+		if fmt.Sprint(claims["role"]) != "2"{
 			r.ErrorResponse(c,http.StatusUnauthorized,errors.New("Upgrade your account to premium to access this page"),nil)
 			c.Abort()
 			return
