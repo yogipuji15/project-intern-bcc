@@ -65,8 +65,13 @@ func (h *rest) CheckOrderTransaction(c *gin.Context) {
 
 	result,_,statusCode,err:=h.uc.Order.UpdateOrderStatus(body)
 	if err!=nil{
+		result,_,statusCode,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
+		if err!=nil{
+			h.ErrorResponse(c,statusCode,err,result)
+			return
+		}
 		h.ErrorResponse(c,statusCode,err,result)
-		c.Next()
+		return
 	}
 
 	h.SuccessResponse(c,statusCode,"Updating order status successfully",result)
