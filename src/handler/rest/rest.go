@@ -61,7 +61,7 @@ func (r *rest) Register() {
 		user.GET("/speaker-details/reviews/:id",r.GetReviewsByUserId)
 		user.GET("/speaker-details/schedules/:id",r.RequireAuth,r.GetAllSchedule)
 		user.POST("/speaker-details/create-order",r.RequireAuth,r.CreateOrder)
-		user.POST("/midtrans/update-order-status",r.CheckOrderTransaction,r.CheckPremiumOrderTransaction)
+		user.POST("/midtrans/update-order-status",r.CheckPremiumOrderTransaction)
 		user.GET("/search-sponsors",r.GetAllSponsors)
 		user.GET("/sponsor-details/:id",r.GetCompanyById)
 		user.POST("/sponsor-details/apply-proposal",r.RequireAuth,r.UploadProposal)
