@@ -54,7 +54,7 @@ func (r *rest) Register() {
 		// user.POST("/upload",r.UploadFileSupabase)
 		user.GET("/order-history",r.RequireAuth,r.GetOrderHistory)
 		user.POST("/upgrade-premium",r.RequireAuth,r.OrderPremiumAccount)
-		user.POST("/order-history/pay-order",r.RequireAuth,r.CreateTransactionByOrderCode,r.CheckPremiumOrderTransaction)
+		user.POST("/order-history/pay-order",r.RequireAuth,r.CheckPremiumOrderTransaction)
 		user.GET("/speaker-category",r.GetAllCategories)
 		user.GET("/search-speakers",r.GetAllSpeakers)
 		user.GET("/speaker-details/:id",r.GetSpeakerById)
