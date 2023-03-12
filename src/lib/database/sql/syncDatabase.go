@@ -16,5 +16,6 @@ func SyncDatabase(){
 		&entity.Roles{},
 		&entity.Schedules{},
 		&entity.Speakers{},
+		&entity.PremiumOrders{},
 	)
 }

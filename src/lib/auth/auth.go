@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
 	"net/smtp"
 	"os"
@@ -15,6 +17,7 @@ type AuthInterface interface {
 	GenerateToken(user entity.Users) (UserAuthInfo, error)
 	HashPassword(password string)([]byte,error)
 	EmailVerification(email string,code string) (error)
+	Hash512(input string) string
 }
 
 type auth struct {
@@ -33,12 +36,12 @@ func (a *auth) GenerateToken(user entity.Users) (UserAuthInfo, error) {
 		"exp":time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 	
-	Role:=""
-	if user.RoleID==0{
-		Role="Free user"
-	}else if user.RoleID==1{
-		Role="Premium user"
-	}
+	// Role:=""
+	// if user.RoleID==0{
+	// 	Role="Free user"
+	// }else if user.RoleID==1{
+	// 	Role="Premium user"
+	// }
 	userResponse:=entity.UserResponse{
 		ID		 : user.ID,
 		Email	 : user.Email,
@@ -46,7 +49,7 @@ func (a *auth) GenerateToken(user entity.Users) (UserAuthInfo, error) {
 		Fullname : user.Fullname,
 		Phone	 : user.Phone ,
 		Address  : user.Address,
-		Role	 : Role,
+		Role	 : user.Role.Role,
 	}
 	tokenString, err := token.SignedString([]byte(os.Getenv("SECRETTOKEN")))
 	userAuth := UserAuthInfo{
@@ -70,4 +73,11 @@ func (a *auth) EmailVerification(email string,code string) (error){
 
 	err := smtp.SendMail(os.Getenv("SMTP_HOST")+":"+os.Getenv("SMTP_PORT"), auth, os.Getenv("EMAIL_FROM"), []string{email}, []byte(message))
 	return err
+}
+
+func (a *auth) Hash512(input string) string {
+	hash := sha512.New()
+	hash.Write([]byte(input))
+	pass := hex.EncodeToString(hash.Sum(nil))
+	return pass
 }

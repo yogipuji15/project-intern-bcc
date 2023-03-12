@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"errors"
 	"net/http"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/business/repository"
@@ -8,7 +9,7 @@ import (
 
 type ScheduleUsecase interface {
 	Create(order entity.Orders)(interface{},int,error)
-	GetAll(speakerId string,month string)(interface{},int,error)
+	GetAll(speakerId string,month string, user entity.UserResponse)(interface{},int,error)
 	GetById(Id string)(entity.Schedules,int,error)
 }
 
@@ -34,11 +35,14 @@ func (h *scheduleUsecase) Create(order entity.Orders)(interface{},int,error){
 		return "Failed to create speaker's schedule",http.StatusInternalServerError,err
 	}
 
-
 	return schedule,http.StatusOK,nil
 }
 
-func (h *scheduleUsecase) GetAll(speakerId string,month string)(interface{},int,error){
+func (h *scheduleUsecase) GetAll(speakerId string,month string, user entity.UserResponse)(interface{},int,error){
+	if user.Role!="premium-user"{
+		return "Upgrade your account to see speaker's schedule",http.StatusUnauthorized,errors.New("Upgrade your account to premium to access this page")
+	}
+	
 	schedules,err:=h.scheduleRepository.GetAllBySpeakerId(speakerId,month)
 	if err != nil{
 		return "Failed to querying speaker's schedules data",http.StatusNotFound,err

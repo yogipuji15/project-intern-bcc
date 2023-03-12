@@ -1,14 +1,13 @@
 package usecase
 
 import (
-	"crypto/sha512"
-	"encoding/hex"
 	"errors"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/business/repository"
+	"project-intern-bcc/src/lib/auth"
 	"time"
 
 	"github.com/google/uuid"
@@ -25,11 +24,13 @@ type OrderUsecase interface {
 
 type orderUsecase struct {
 	orderRepository repository.OrderRepository
+	auth auth.AuthInterface
 }
 
-func NewOrderUsecase(r repository.OrderRepository) OrderUsecase {
+func NewOrderUsecase(r repository.OrderRepository,auth auth.AuthInterface) OrderUsecase {
 	return &orderUsecase{
 		orderRepository: r,
+		auth: auth,
 	}
 }
 
@@ -130,7 +131,7 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 	
 	mySignature:=body.OrderID+body.StatusCode+body.GrossAmount+os.Getenv("SERVER_KEY")
 
-	if body.SignatureKey !=h.Hash512(mySignature){
+	if body.SignatureKey !=h.auth.Hash512(mySignature){
 		return "Signature key is invalid",order,http.StatusUnauthorized,errors.New("Signature key is invalid")
 	}
 
@@ -153,13 +154,6 @@ func (h *orderUsecase) UpdateOrderStatus(body entity.CheckTransaction) (interfac
 	}
 
 	return "Updating order status successfully",order,http.StatusOK,err
-}
-
-func (h *orderUsecase) Hash512(input string) string {
-	hash := sha512.New()
-	hash.Write([]byte(input))
-	pass := hex.EncodeToString(hash.Sum(nil))
-	return pass
 }
 
 func (h *orderUsecase) GetAllOrders(userId any, pagination entity.Pagination) (interface{},int,error){

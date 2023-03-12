@@ -34,7 +34,7 @@ func Init(db *gorm.DB,storage storage.StorageInterface, midtrans midtrans.Midtra
 		Role: NewRoleRepository(db),
 		Schedule: NewScheduleRepository(db),
 		Speaker: NewSpeakerRepository(db),
-		PremiumOrder: NewPremiumOrderRepository(db),
+		PremiumOrder: NewPremiumOrderRepository(db,midtrans),
 		CompanyCategory: NewCompanyCategoryRepository(db),
 	}
 }
