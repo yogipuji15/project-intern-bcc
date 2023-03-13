@@ -2,7 +2,6 @@ package rest
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	// "os"
@@ -12,10 +11,13 @@ import (
 )
 
 func (h *rest) Test(c *gin.Context){
-	data,err:= h.uc.User.Test(c)
-	fmt.Println(err)
-	h.SuccessResponse(c, http.StatusOK,"Test Berhasil", data)
+	// data,err:= h.uc.User.Test(c)
+	// fmt.Println(err)
+
+	h.ErrorResponse(c,http.StatusNotFound,errors.New("asdasd"),"")
+	h.SuccessResponse(c, http.StatusOK,"Test Berhasil", "data1")
 }
+
 
 func (h *rest) SignUp(c *gin.Context){
 	var body entity.UserSignup

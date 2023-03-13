@@ -49,5 +49,5 @@ func (h *rest) CheckPremiumOrderTransaction(c *gin.Context) {
 		return
 	}
 
-	h.SuccessResponse(c,statusCode,"Updating premium order status successfully",result)
+	h.SuccessResponse(c,statusCode,"Updating order status successfully",result)
 }

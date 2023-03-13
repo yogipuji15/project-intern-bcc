@@ -65,11 +65,12 @@ func (h *rest) CheckOrderTransaction(c *gin.Context) {
 
 	result,_,statusCode,err:=h.uc.Order.UpdateOrderStatus(body)
 	if err!=nil{
-		result,_,statusCode,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
-		if err!=nil{
-			h.ErrorResponse(c,statusCode,err,result)
-			return
-		}
+		// result,_,statusCode,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
+		// if err!=nil{
+		// 	h.ErrorResponse(c,statusCode,err,result)
+		// 	return
+		// }
+		c.Next()
 		h.ErrorResponse(c,statusCode,err,result)
 		return
 	}
@@ -126,3 +127,4 @@ func (h *rest) CreateTransactionByOrderCode(c *gin.Context) {
 
 	h.SuccessResponse(c,statusCode,"Create order transaction successfully",result)
 }
+
