@@ -36,18 +36,3 @@ func (h *rest) OrderPremiumAccount(c *gin.Context) {
 	h.SuccessResponse(c,statusCode,"Create premium account order successfully",result)
 }
 
-func (h *rest) CheckPremiumOrderTransaction(c *gin.Context) {
-	var body entity.CheckTransaction
-	if err:=h.BindBody(c,&body);err != nil {
-		h.ErrorResponse(c, http.StatusBadRequest,err,"Failed to read body")
-		return
-	}
-
-	result,_,statusCode,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
-	if err!=nil{
-		h.ErrorResponse(c,statusCode,err,result)
-		return
-	}
-
-	h.SuccessResponse(c,statusCode,"Updating order status successfully",result)
-}
