@@ -8,7 +8,6 @@ import (
 	"project-intern-bcc/src/lib/auth"
 	"project-intern-bcc/src/lib/storage"
 	"time"
-
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,7 +19,7 @@ type UserUsecase interface {
 	UserVerification(token string)(interface{},int,error)
 	GetById(id any) (entity.UserResponse,int,error)
 	ConvertToUserResponse(user entity.Users) (entity.UserResponse)
-	UpdateUserPremium(userId uint) (interface{},int,error)
+	UpdateUserPremium(userId uint, premiumDue int) (interface{},int,error)
 }
 
 type userUsecase struct {
@@ -84,7 +83,7 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 	
 	user := entity.Users{
 		Username : userInput.Username,
-		RoleID    : 0,
+		RoleID    : 1,
 		IsActive : false,
 		Fullname: userInput.Fullname,
 		Address: userInput.Address,
@@ -172,7 +171,7 @@ func (h *userUsecase) Login(c *gin.Context, userInput entity.UserLogin)(interfac
 
 
 func (h *userUsecase) GetById(id any) (entity.UserResponse,int,error){
-	user,err:=h.userRepository.FindById(id)
+	user,err:=h.userRepository.FindByIdWithRole(id)
 	
 	userResponse:= h.ConvertToUserResponse(user)
 	if err!=nil{
@@ -194,15 +193,15 @@ func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserRespo
 	}
 }
 
-func (h *userUsecase) UpdateUserPremium(userId uint) (interface{},int,error){
+func (h *userUsecase) UpdateUserPremium(userId uint, premiumDue int) (interface{},int,error){
 	user,err:=h.userRepository.FindById(userId)
 	if err!=nil{
 		return "Failed to querying user's data",http.StatusNotFound,err
 	}
 
-	user.PremiumDue=time.Now().Add(time.Hour * 24 * 30 * 12)
+	user.PremiumDue=time.Now().Add(time.Hour * 24 * 30 * time.Duration(premiumDue))
 	user.RoleID=2
-
+	
 	err=h.userRepository.Update(user)
 	if err!=nil{
 		return "Failed to updating user's data",http.StatusInternalServerError,err

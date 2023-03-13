@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"project-intern-bcc/src/business/entity"
 
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ type UserRepository interface {
 	Delete(user entity.Users)(error)
 	FindUserByToken(token string)(entity.Users,error)
 	FindByEmail(email string)(entity.Users,error)
+	FindByIdWithRole(id any)(entity.Users,error)
 	FindById(id any)(entity.Users,error)
 }
 
@@ -37,6 +39,8 @@ func (h *userRepository) Create(user entity.Users)(entity.Users,error){
 }
 
 func (h *userRepository) Update(user entity.Users)(error){
+	fmt.Println(user.RoleID)
+	fmt.Println(user)
 	err:=h.db.Save(&user).Error
 	return err
 }
@@ -64,8 +68,14 @@ func (h *userRepository) FindUserByToken(token string)(entity.Users,error){
 	return user,err
 }
 
-func (h *userRepository) FindById(id any)(entity.Users,error){
+func (h *userRepository) FindByIdWithRole(id any)(entity.Users,error){
 	var user entity.Users
 	err:=h.db.Preload("Role").First(&user, "id=?",id).Error
+	return user,err
+}
+
+func (h *userRepository) FindById(id any)(entity.Users,error){
+	var user entity.Users
+	err:=h.db.First(&user, "id=?",id).Error
 	return user,err
 }

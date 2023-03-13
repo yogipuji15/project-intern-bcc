@@ -71,7 +71,7 @@ func (h *rest) CheckOrderTransaction(c *gin.Context) {
 			return
 		}
 
-		resultPremium,statusCodePremium,err :=h.uc.User.UpdateUserPremium(premiumOrder.UserID)
+		resultPremium,statusCodePremium,err :=h.uc.User.UpdateUserPremium(premiumOrder.UserID,premiumOrder.Quantity)
 		if err!=nil{
 			h.ErrorResponse(c,statusCodePremium,err,resultPremiumOrder)
 			return
