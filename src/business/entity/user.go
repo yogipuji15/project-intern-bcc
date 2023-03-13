@@ -12,10 +12,11 @@ type Users struct {
 	Address			 string	   `gorm:"type:varchar(255)" json:"address"`
 	Phone			 string	   `gorm:"type:varchar(255)" json:"phone"`
 	Password         string    `gorm:"type:varchar(255)" json:"password"`
+	PremiumDue 		 time.Time `gorm:"default:null" json:"premiumDue"`
 	RoleID			 uint
 	Role 			 Roles	   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	VerificationCode string    `gorm:"type:varchar(255)" json:"verificationCode"`
-	IsActive        bool      `gorm:"not null" json:"isActive"`
+	IsActive       	 bool      `gorm:"not null" json:"isActive"`
 }
 
 type UserResponse struct {

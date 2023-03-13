@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"mime/multipart"
 	"net/http"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/business/repository"
@@ -18,10 +17,10 @@ type UserUsecase interface {
 	Test(c *gin.Context) (entity.Users,error)
 	SignUp(userInput entity.UserSignup) (interface{},int,error)
 	Login(c *gin.Context, userInput entity.UserLogin) (interface{},int,error)
-	UploadFile(c *gin.Context,file *multipart.FileHeader) (interface{},int,error)
 	UserVerification(token string)(interface{},int,error)
 	GetById(id any) (entity.UserResponse,int,error)
 	ConvertToUserResponse(user entity.Users) (entity.UserResponse)
+	UpdateUserPremium(userId uint) (interface{},int,error)
 }
 
 type userUsecase struct {
@@ -170,14 +169,7 @@ func (h *userUsecase) Login(c *gin.Context, userInput entity.UserLogin)(interfac
 	return token,http.StatusOK,nil
 }
 
-func (h *userUsecase) UploadFile(c *gin.Context,file *multipart.FileHeader) (interface{},int,error){
 
-	link, err :=h.storage.UploadFile(file)
-	if err != nil{
-		return "Failed to upload file",http.StatusInternalServerError,err
-	}
-	return link, http.StatusOK,nil
-}
 
 func (h *userUsecase) GetById(id any) (entity.UserResponse,int,error){
 	user,err:=h.userRepository.FindById(id)
@@ -200,4 +192,21 @@ func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserRespo
 		Phone	 : user.Phone,
 		Role	 : user.Role.Role,
 	}
+}
+
+func (h *userUsecase) UpdateUserPremium(userId uint) (interface{},int,error){
+	user,err:=h.userRepository.FindById(userId)
+	if err!=nil{
+		return "Failed to querying user's data",http.StatusNotFound,err
+	}
+
+	user.PremiumDue=time.Now().Add(time.Hour * 24 * 30 * 12)
+	user.RoleID=2
+
+	err=h.userRepository.Update(user)
+	if err!=nil{
+		return "Failed to updating user's data",http.StatusInternalServerError,err
+	}
+
+	return "Upgrade Premium Successfully",http.StatusOK,nil
 }

@@ -65,11 +65,19 @@ func (h *rest) CheckOrderTransaction(c *gin.Context) {
 
 	result,_,statusCode,err:=h.uc.Order.UpdateOrderStatus(body)
 	if err!=nil{
-		result,_,statusCode,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
+		resultPremiumOrder,premiumOrder,statusCodePremium,err:=h.uc.PremiumOrder.UpdatePremiumOrderStatus(body)
 		if err!=nil{
-			h.ErrorResponse(c,statusCode,err,result)
+			h.ErrorResponse(c,statusCodePremium,err,resultPremiumOrder)
+			return
 		}
-		h.ErrorResponse(c,statusCode,err,result)
+
+		resultPremium,statusCodePremium,err :=h.uc.User.UpdateUserPremium(premiumOrder.UserID)
+		if err!=nil{
+			h.ErrorResponse(c,statusCodePremium,err,resultPremiumOrder)
+			return
+		}
+
+		h.SuccessResponse(c,statusCodePremium,"Upgrade Premium User Successfully",resultPremium)
 		return
 	}
 
