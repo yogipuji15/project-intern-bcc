@@ -48,7 +48,12 @@ func (h *scheduleUsecase) GetAll(speakerId string,month string, user entity.User
 		return "Failed to querying speaker's schedules data",http.StatusNotFound,err
 	}
 	
-	return schedules,http.StatusOK,nil
+	var schedulesResponse []entity.ScheduleResponse
+	for _,s:=range schedules{
+		schedulesResponse=append(schedulesResponse, h.ConvertToScheduleResponse(s))
+	}
+
+	return schedulesResponse,http.StatusOK,nil
 }
 
 func (h *scheduleUsecase) GetById(Id string)(entity.Schedules,int,error){
@@ -58,4 +63,13 @@ func (h *scheduleUsecase) GetById(Id string)(entity.Schedules,int,error){
 	}
 
 	return schedule,http.StatusOK,nil
+}
+
+func (h *scheduleUsecase) ConvertToScheduleResponse(schedules entity.Schedules)(entity.ScheduleResponse){
+	return entity.ScheduleResponse{
+		TimeStart 	:schedules.TimeStart,
+		TimeEnd 	:schedules.TimeEnd,
+		Duration    :schedules.Duration,
+		SpeakerID	:schedules.SpeakerID,
+	}
 }
