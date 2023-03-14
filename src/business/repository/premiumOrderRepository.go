@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/lib/midtrans"
 
@@ -27,12 +28,17 @@ func NewPremiumOrderRepository(db *gorm.DB, midtrans midtrans.MidtransInterface)
 }
 
 func (h *premiumOrderRepository) Create(premiumOrder entity.PremiumOrders)(entity.PremiumOrders,*coreapi.ChargeResponse,error){
-	err:=h.db.Create(&premiumOrder).Error
+	resp,err:=h.midtrans.CreatePremiumTransaction(premiumOrder)
+	if resp.OrderID==""{
+		return premiumOrder,nil,errors.New("Midtrans Transaction Failed")
+	}
+
+	err=h.db.Create(&premiumOrder).Error
 	if err!=nil{
 		return premiumOrder,nil,err
 	}
 
-	resp,err:=h.midtrans.CreatePremiumTransaction(premiumOrder)
+
 	return premiumOrder,resp,err
 }
 

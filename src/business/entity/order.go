@@ -18,11 +18,11 @@ type Orders struct {
 	TotalPrice int `gorm:"type:int" json:"totalPrice"`
 	Rundown string `gorm:"type:varchar(255)" json:"rundown"`
 	Script string `gorm:"type:varchar(255)" json:"script"`
-	UserID uint
+	UserID uint `json:"userId"`
 	User Users `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	SpeakerID uint
+	SpeakerID uint `json:"speakerId"`
 	Speaker Speakers `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	PaymentID uint
+	PaymentID uint `json:"paymentId"`
 	Payment Payments `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

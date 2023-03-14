@@ -11,7 +11,7 @@ type Companies struct {
 	Location 	  		string `gorm:"type:varchar(255)" json:"location"`
 	ProposalsAccepted	int `gorm:"type:int" json:"proposalsAccepted"`
 	Partner				string `gorm:"type:varchar(255)" json:"partner"`
-	CategoryID			uint
+	CategoryID			uint `json:"categoryId"`
 	Category 			Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

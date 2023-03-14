@@ -10,9 +10,9 @@ type Proposals struct {
 	Message string `gorm:"type:longtext" json:"message"`
 	Email string `gorm:"type:varchar(50)" json:"email"`
 	Phone string `gorm:"type:varchar(50)" json:"phone"`
-	UserID uint
+	UserID uint `json:"userId"`
 	User Users `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CompanyID uint
+	CompanyID uint `json:"companyId"`
 	Company Companies `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

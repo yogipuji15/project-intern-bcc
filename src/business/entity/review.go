@@ -10,9 +10,9 @@ type Reviews struct {
 	Review 		string `gorm:"type:longtext" json:"review"`
 	Star 		int `gorm:"type:int" json:"star"`
 	Date 		datatypes.Date `gorm:"type:date" json:"date"`
-	UserID 		uint
+	UserID 		uint `json:"userId"`
 	User Users 	`gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	SpeakerID 	uint
+	SpeakerID 	uint `json:"speakerId"`
 	Speaker 	Speakers `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"mime/multipart"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/lib/midtrans"
@@ -46,16 +47,17 @@ func (h *orderRepository) Create(speaker entity.Speakers,user entity.UserRespons
 	order.Rundown=rundownLink
 	order.Script=scriptLink
 	
-	err=h.db.Create(&order).Error
-	
+
 	if user.Role=="premium-user"{
 		resp,err:=h.midtrans.CreateTransaction(order,speaker)
-		if err!=nil{
-			return order,nil,err
+		if resp.OrderID==""{
+			return order,nil,errors.New("Midtrans Transaction Failed")
 		}
+		err=h.db.Create(&order).Error
 		return order,resp,err
 	}
 
+	err=h.db.Create(&order).Error
 	return order,nil,err
 }
 

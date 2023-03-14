@@ -8,9 +8,9 @@ type PremiumOrders struct {
 	Status bool `gorm:"type:bool" json:"status"`
 	Quantity int `gorm:"type:int" json:"quantity"`
 	TotalPrice int `gorm:"type:int" json:"totalPrice"`
-	UserID uint
+	UserID uint `json:"userId"`
 	User Users `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	PaymentID uint
+	PaymentID uint `json:"paymentId"`
 	Payment Payments `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

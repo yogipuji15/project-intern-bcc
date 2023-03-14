@@ -13,7 +13,7 @@ type Users struct {
 	Phone			 string	   `gorm:"type:varchar(255)" json:"phone"`
 	Password         string    `gorm:"type:varchar(255)" json:"password"`
 	PremiumDue 		 time.Time `gorm:"default:null" json:"premiumDue"`
-	RoleID			 uint
+	RoleID			 uint	   `json:"roleId"`
 	Role 			 Roles	   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	VerificationCode string    `gorm:"type:varchar(255)" json:"verificationCode"`
 	IsActive       	 bool      `gorm:"not null" json:"isActive"`
