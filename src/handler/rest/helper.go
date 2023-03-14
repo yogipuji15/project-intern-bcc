@@ -62,11 +62,25 @@ func (r *rest) RequireAuth(c *gin.Context){
 			return
 		}
 		
-		if user,statusCode,err:=r.uc.User.GetById(claims["id"]);err!=nil{
+		user,statusCode,err:=r.uc.User.GetById(claims["id"])
+		if err!=nil{
 			r.ErrorResponse(c,statusCode,err,user)
 			c.Abort()
 			return
 		}
+		
+		if user.Role=="premium-user"{
+			if float64(time.Now().Unix())>float64(user.PremiumDue.Unix()){
+				result,status,err:=r.uc.User.UpdateToFreeUser(user.ID)
+				if err!=nil{
+					r.ErrorResponse(c,status,err,result)
+					c.Abort()
+					return
+				}
+				
+			}
+		}
+
 		c.Set("user",claims["id"])
 		c.Next()
 	} else {

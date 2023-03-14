@@ -67,5 +67,6 @@ func (r *rest) Register() {
 		user.POST("/sponsor-details/apply-proposal",r.RequireAuth,r.UploadProposal)
 		user.POST("/create-review",r.RequireAuth,r.PostReview)
 		user.GET("/profile",r.RequireAuth,r.GetUserById)
+		user.GET("/test",r.RequireAuth)
 	}
 }

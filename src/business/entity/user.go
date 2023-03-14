@@ -27,6 +27,7 @@ type UserResponse struct {
 	Address  string `json:"address"`
 	Phone	 string	`json:"phone"`
 	Role	 string `json:"role"`
+	PremiumDue time.Time `json:"premiumDue"`
 }
 
 type UserSignup struct {

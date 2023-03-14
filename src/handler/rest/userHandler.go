@@ -3,11 +3,8 @@ package rest
 import (
 	"errors"
 	"net/http"
-
-	// "os"
 	"project-intern-bcc/src/business/entity"
 	"github.com/gin-gonic/gin"
-	// storage_go "github.com/supabase-community/storage-go"
 )
 
 func (h *rest) Test(c *gin.Context){

@@ -20,6 +20,7 @@ type UserUsecase interface {
 	GetById(id any) (entity.UserResponse,int,error)
 	ConvertToUserResponse(user entity.Users) (entity.UserResponse)
 	UpdateUserPremium(userId uint, premiumDue int) (interface{},int,error)
+	UpdateToFreeUser(userId uint) (interface{},int,error)
 }
 
 type userUsecase struct {
@@ -92,6 +93,7 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 		UpdatedAt : time.Now(),
 	}
 
+	user.Role.Role="premium-user"
 	token,err:=h.auth.GenerateToken(user)
 	if err!=nil{
 		return "Failed to create token",http.StatusBadRequest,err
@@ -190,6 +192,7 @@ func (h *userUsecase) ConvertToUserResponse(user entity.Users) (entity.UserRespo
 		Address  : user.Address,
 		Phone	 : user.Phone,
 		Role	 : user.Role.Role,
+		PremiumDue: user.PremiumDue,
 	}
 }
 
@@ -208,4 +211,20 @@ func (h *userUsecase) UpdateUserPremium(userId uint, premiumDue int) (interface{
 	}
 
 	return "Upgrade Premium Successfully",http.StatusOK,nil
+}
+
+func (h *userUsecase) UpdateToFreeUser(userId uint) (interface{},int,error){
+	user,err:=h.userRepository.FindById(userId)
+	if err!=nil{
+		return "Failed to querying user's data",http.StatusNotFound,err
+	}
+
+	user.RoleID=1
+	
+	err=h.userRepository.Update(user)
+	if err!=nil{
+		return "Failed to updating user's data",http.StatusInternalServerError,err
+	}
+
+	return "Update User's Role Successfully",http.StatusOK,nil
 }
