@@ -2,12 +2,14 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"project-intern-bcc/src/business/entity"
 	"project-intern-bcc/src/business/repository"
 	"project-intern-bcc/src/lib/auth"
 	"project-intern-bcc/src/lib/storage"
 	"time"
+
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -93,26 +95,26 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 		UpdatedAt : time.Now(),
 	}
 
-	user.Role.Role="premium-user"
 	token,err:=h.auth.GenerateToken(user)
 	if err!=nil{
 		return "Failed to create token",http.StatusBadRequest,err
 	}
-
 	
 	hash, err := h.auth.HashPassword(userInput.Password)
 	if err!= nil{
 		return "Failed to hash password",http.StatusBadRequest,err
 	}
-
+	fmt.Println("===============")
+	
 	user.Password = string(hash)
 	user.VerificationCode = token.Token
 	user.Email = userInput.Email
 	
-	user,err = h.userRepository.Create(user)
+	err = h.userRepository.Create(user)
 	if err!= nil{
 		return "Failed to create user",http.StatusInternalServerError,err
 	}
+	user.Role.Role="free-user"
 	
 	userResponse:=h.ConvertToUserResponse(user)
 	

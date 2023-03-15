@@ -9,7 +9,7 @@ import (
 
 type UserRepository interface {
 	Test()(entity.Users,error)
-	Create(user entity.Users)(entity.Users,error)
+	Create(user entity.Users)(error)
 	FindByEmailUsername(emailUsername string)(entity.Users,error)
 	Update(user entity.Users)(error)
 	Delete(user entity.Users)(error)
@@ -33,9 +33,9 @@ func (h *userRepository) Test()(entity.Users,error){
 	return user,err
 }
 
-func (h *userRepository) Create(user entity.Users)(entity.Users,error){
+func (h *userRepository) Create(user entity.Users)(error){
 	err:=h.db.Create(&user).Error
-	return user,err
+	return err
 }
 
 func (h *userRepository) Update(user entity.Users)(error){
