@@ -27,7 +27,7 @@ func Init(usecase *usecase.Usecase) Rest {
 
 func (r *rest) Run() {
 	r.gin.Use(func(c *gin.Context) {
-		// c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		
 		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, authorization, accept, origin, Cache-Control, X-Requested-With")
