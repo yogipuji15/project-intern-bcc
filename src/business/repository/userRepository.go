@@ -64,7 +64,7 @@ func (h *userRepository) Delete(user entity.Users)(error){
 
 func (h *userRepository) FindUserByToken(token string)(entity.Users,error){
 	var user entity.Users
-	err:=h.db.Preload("Role").First(&user, "verification_code=?",token).Error
+	err:=h.db.First(&user, "verification_code=?",token).Error
 	return user,err
 }
 
