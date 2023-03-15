@@ -40,7 +40,6 @@ func (r *rest) Run() {
 		}
 	})
 
-
 	r.gin.Run()
 }
 
