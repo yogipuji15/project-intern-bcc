@@ -83,6 +83,8 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 			h.userRepository.Delete(userOld)
 		}
 	}
+
+	
 	
 	user := entity.Users{
 		Username : userInput.Username,
