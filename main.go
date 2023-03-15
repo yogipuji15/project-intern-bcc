@@ -29,7 +29,7 @@ func main()  {
 	usecase := usecase.Init(storage,auth,repository)
 	rest := rest.Init(usecase)
 
-	
+
 	
 	rest.Run()
 }
