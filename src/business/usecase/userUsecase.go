@@ -77,14 +77,14 @@ func (h *userUsecase) SignUp(userInput entity.UserSignup) (interface{},int,error
 		return "The password confirmation doesn't match",http.StatusBadRequest,errors.New("Invalid password confirmation")
 	}
 
-	userOld,err:=h.userRepository.FindByEmail(userInput.Email)
+	userOld,err:=h.userRepository.FindByEmailUsername(userInput.Email)
 	if err==nil{
 		if userOld.Email==userInput.Email && userOld.IsActive==false{
 			h.userRepository.Delete(userOld)
 		}
 	}
 
-	
+
 	
 	user := entity.Users{
 		Username : userInput.Username,
