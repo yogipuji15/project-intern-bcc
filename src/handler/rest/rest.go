@@ -39,6 +39,7 @@ func (r *rest) Run() {
 			c.Next()
 		}
 	})
+	
 
 	r.gin.Run()
 }
