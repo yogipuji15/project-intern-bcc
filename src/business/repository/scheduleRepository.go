@@ -27,7 +27,7 @@ func (h *scheduleRepository) Create(schedule entity.Schedules) (entity.Schedules
 
 func (h *scheduleRepository) GetAllBySpeakerId(speakerId string, month string) ([]entity.Schedules, error) {
 	var schedules []entity.Schedules
-	err := h.db.Where("time_start BETWEEN ? AND ?", month+"-01 00:00:00", month+"-29 23:59:00").Find(&schedules, "speaker_id = ?", speakerId).Error
+	err := h.db.Where("time_start BETWEEN ? AND ?", month+"-01 00:00:00", month+"-28 23:59:00").Find(&schedules, "speaker_id = ?", speakerId).Error
 
 	return schedules, err
 }
