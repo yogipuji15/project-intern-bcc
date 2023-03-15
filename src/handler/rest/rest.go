@@ -20,12 +20,6 @@ func Init(usecase *usecase.Usecase) Rest {
 		uc:usecase,
 		gin: gin.Default(),
 	}
-
-	r.Register()
-	return r
-}
-
-func (r *rest) Run() {
 	r.gin.Use(func(c *gin.Context) {
 		
 		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
@@ -39,7 +33,11 @@ func (r *rest) Run() {
 			c.Next()
 		}
 	})
+	r.Register()
+	return r
+}
 
+func (r *rest) Run() {
 	r.gin.Run()
 }
 
