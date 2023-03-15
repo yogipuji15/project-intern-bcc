@@ -69,7 +69,7 @@ func (a *auth) EmailVerification(email string,code string) (error){
 	auth := smtp.PlainAuth("", os.Getenv("EMAIL_FROM"), os.Getenv("SMTP_PASS"), os.Getenv("SMTP_HOST"))
 
 	message := fmt.Sprintf(
-		"From: %s\r\nTo: %s\r\nSubject: CreatOr Email Verification\r\n\r\nDear User,\r\nThanks for starting the new CreatOr account creation process. We want to make sure it's really you. Please click the verification link below to activate your account! If you don’t want to create an account, you can ignore this message.\r\nVerification Link: http://localhost:8080/api/v1/user/signup/verification?token=%s\r\n", os.Getenv("EMAIL_FROM"), email, code)
+		"From: %s\r\nTo: %s\r\nSubject: CreatOr Email Verification\r\n\r\nDear User,\r\nThanks for starting the new CreatOr account creation process. We want to make sure it's really you. Please click the verification link below to activate your account! If you don’t want to create an account, you can ignore this message.\r\nVerification Link: https://project-intern-bcc-production.up.railway.app/api/v1/user/signup/verification?token=%s\r\n", os.Getenv("EMAIL_FROM"), email, code)
 
 	err := smtp.SendMail(os.Getenv("SMTP_HOST")+":"+os.Getenv("SMTP_PORT"), auth, os.Getenv("EMAIL_FROM"), []string{email}, []byte(message))
 	return err
