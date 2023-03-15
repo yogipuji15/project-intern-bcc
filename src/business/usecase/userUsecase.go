@@ -135,6 +135,7 @@ func (h *userUsecase) UserVerification(token string)(interface{},int,error){
 	}
 
 	user.IsActive=true
+	user.PremiumDue=time.Now()
 	err=h.userRepository.Update(user)
 	if err!=nil{
 		return "Failed to Updating User Data",http.StatusInternalServerError,err
