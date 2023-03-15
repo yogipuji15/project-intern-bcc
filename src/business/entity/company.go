@@ -13,6 +13,7 @@ type Companies struct {
 	ProposalsAccepted	int `gorm:"type:int" json:"proposalsAccepted"`
 	Partner				string `gorm:"type:varchar(255)" json:"partner"`
 	Website				string `gorm:"type:varchar(255)" json:"website"`
+	Phone			 string	   `gorm:"type:varchar(255)" json:"phone"`
 	CategoryID			uint `json:"categoryId"`
 	Category 			Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
