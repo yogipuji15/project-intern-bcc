@@ -14,11 +14,9 @@ type Companies struct {
 	Partner				string `gorm:"type:varchar(255)" json:"partner"`
 	Website				string `gorm:"type:varchar(255)" json:"website"`
 	Phone			 	string `gorm:"type:varchar(255)" json:"phone"`
-	SponsorAssistance	string `gorm:"longtext" json:"sponsorAssistance"`
 	CategoryID			uint `json:"categoryId"`
 	Category 			Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
-
 
 type CompaniesResponse struct{
 	Companies []Companies
