@@ -19,6 +19,7 @@ type Companies struct {
 	Category 			Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
+
 type CompaniesResponse struct{
 	Companies []Companies
 	Pagination Pagination
