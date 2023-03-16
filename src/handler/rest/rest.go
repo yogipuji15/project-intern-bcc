@@ -33,6 +33,7 @@ func Init(usecase *usecase.Usecase) Rest {
 			c.Next()
 		}
 	})
+	
 	r.Register()
 	return r
 }
