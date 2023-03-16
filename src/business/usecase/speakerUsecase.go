@@ -8,7 +8,7 @@ import (
 )
 
 type SpeakerUsecase interface {
-	FindAll(filter entity.FilterParam, pagination entity.Pagination)(interface{},int,error)
+	FindAll(filter entity.FilterParam, pagination entity.Pagination, schedule []uint)(interface{},int,error)
 	GetById(speakerId string)(entity.Speakers,int,error)
 	UpdateRating(speakerId uint, totalRating float32)(interface{},int,error)
 }
@@ -23,8 +23,8 @@ func NewSpeakerUsecase(r repository.SpeakerRepository) SpeakerUsecase {
 	}
 }
 
-func (h *speakerUsecase) FindAll(filter entity.FilterParam, pagination entity.Pagination)(interface{},int,error){
-	speakers,pg,err:=h.speakerRepository.FindAll(filter, pagination)
+func (h *speakerUsecase) FindAll(filter entity.FilterParam, pagination entity.Pagination, speakerId []uint)(interface{},int,error){
+	speakers,pg,err:=h.speakerRepository.FindAll(filter, pagination, speakerId)
 	if err!=nil{
 		return "Failed to Querying Speakers Data",http.StatusNotFound,err
 	}

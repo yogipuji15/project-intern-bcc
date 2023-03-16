@@ -11,6 +11,7 @@ type ScheduleUsecase interface {
 	Create(order entity.Orders)(interface{},int,error)
 	GetAll(speakerId string,month string, user entity.UserResponse)(interface{},int,error)
 	GetById(Id string)(entity.Schedules,int,error)
+	GetSchedulesByDate(filter entity.FilterParam)([]uint,int,error)
 }
 
 type scheduleUsecase struct {
@@ -72,4 +73,19 @@ func (h *scheduleUsecase) ConvertToScheduleResponse(schedules entity.Schedules)(
 		Duration    :schedules.Duration,
 		SpeakerID	:schedules.SpeakerID,
 	}
+}
+
+func (h *scheduleUsecase) GetSchedulesByDate(filter entity.FilterParam)([]uint,int,error){
+	schedule,err:=h.scheduleRepository.GetByDate(filter)
+	if err!=nil{
+		return nil,http.StatusNotFound,err
+	}
+
+	
+	var speakerId []uint
+	for _,s:=range schedule{
+		speakerId=append(speakerId, s.SpeakerID)
+	}
+	
+	return speakerId,http.StatusOK,nil
 }

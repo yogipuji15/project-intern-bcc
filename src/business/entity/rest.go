@@ -54,4 +54,5 @@ type FilterParam struct{
 	Location	string  `form:"location" json:"-" gorm:"-"`
 	MinPrice	int  `form:"minPrice" json:"-" gorm:"-"`
 	MaxPrice	int  `form:"maxPrice" json:"-" gorm:"-"`
+	Date		string  `form:"date" json:"-" gorm:"-"`
 }

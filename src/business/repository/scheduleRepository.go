@@ -10,6 +10,7 @@ type ScheduleRepository interface {
 	Create(schedule entity.Schedules) (entity.Schedules, error)
 	GetAllBySpeakerId(speakerId string, month string) ([]entity.Schedules, error)
 	GetById(Id string) (entity.Schedules, error)
+	GetByDate(date entity.FilterParam) ([]entity.Schedules, error)
 }
 
 type scheduleRepository struct {
@@ -35,5 +36,12 @@ func (h *scheduleRepository) GetAllBySpeakerId(speakerId string, month string) (
 func (h *scheduleRepository) GetById(Id string) (entity.Schedules, error) {
 	var schedule entity.Schedules
 	err := h.db.Where("id = ?", Id).Find(&schedule).Error
+	return schedule, err
+}
+
+
+func (h *scheduleRepository) GetByDate(date entity.FilterParam) ([]entity.Schedules, error) {
+	var schedule []entity.Schedules
+	err := h.db.Where("time_start BETWEEN ? AND ?", date.Date+" 00:00:00", date.Date+" 23:59:59").Find(&schedule).Error
 	return schedule, err
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type SpeakerRepository interface {
-	FindAll(filter entity.FilterParam, pagination entity.Pagination)([]entity.Speakers,*entity.Pagination,error)
+	FindAll(filter entity.FilterParam, pagination entity.Pagination, speakerId []uint)([]entity.Speakers,*entity.Pagination,error)
 	GetById(id string) (entity.Speakers,error)
 	UpdateRating(speaker entity.Speakers) (error)
 }
@@ -20,11 +20,28 @@ func NewSpeakerRepository(db *gorm.DB) SpeakerRepository {
 	return &speakerRepository{db:db}
 }
 
-func (h *speakerRepository) FindAll(filter entity.FilterParam, pagination entity.Pagination)([]entity.Speakers,*entity.Pagination,error){
+func (h *speakerRepository) FindAll(filter entity.FilterParam, pagination entity.Pagination, speakerId []uint)([]entity.Speakers,*entity.Pagination,error){
 	pg:= entity.FormatPaginationParam(pagination)
 	maxPrice:=filter.MaxPrice
 	if maxPrice==0{
 		maxPrice=999999999999999999
+	}
+	
+	if filter.Date!=""{
+		var speakers []entity.Speakers
+		err:= h.db.Order("rating desc").Joins("Category", h.db.Where(&entity.Categories{Category: filter.Category})).Where("speakers.id IN ? AND name LIKE ? AND location LIKE ? AND price BETWEEN ? AND ?", speakerId, "%"+filter.Keyword+"%", "%"+filter.Location+"%",filter.MinPrice,maxPrice).Offset(int(pg.Offset)).Limit(int(pg.Limit)).Find(&speakers).Error
+		if err!=nil{
+			return nil,nil,err
+		}
+
+		err = h.db.Order("rating desc").Model(&speakers).Joins("Category", h.db.Where(&entity.Categories{Category: filter.Category})).Where("speakers.id IN ? AND name LIKE ? AND location LIKE ? AND price BETWEEN ? AND ?", speakerId, "%"+filter.Keyword+"%", "%"+filter.Location+"%",filter.MinPrice,maxPrice).Count(&pg.TotalElement).Error
+		if err!=nil{
+			return nil,nil,err
+		}
+
+		pg.ProcessPagination(int64(len(speakers)))
+
+		return speakers,&pg,err
 	}
 
 	var speakers []entity.Speakers

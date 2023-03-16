@@ -17,7 +17,6 @@ type Companies struct {
 	SponsorAssistance	string `gorm:"longtext" json:"sponsorAssistance"`
 	CategoryID			uint `json:"categoryId"`
 	Category 			Categories `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	
 }
 
 

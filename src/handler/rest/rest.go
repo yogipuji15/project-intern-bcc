@@ -33,7 +33,7 @@ func Init(usecase *usecase.Usecase) Rest {
 			c.Next()
 		}
 	})
-	
+
 	r.Register()
 	return r
 }
@@ -56,6 +56,7 @@ func (r *rest) Register() {
 		user.POST("/order-history/pay-order",r.RequireAuth,r.CreateTransactionByOrderCode)
 		user.GET("/speaker-category",r.GetAllCategories)
 		user.GET("/search-speakers",r.GetAllSpeakers)
+		user.GET("/premium-search-speakers",r.RequireAuth,r.GetAllSpeakers)
 		user.GET("/speaker-details/:id",r.GetSpeakerById)
 		user.GET("/speaker-details/reviews/:id",r.GetReviewsByUserId)
 		user.GET("/speaker-details/schedules/:id",r.RequireAuth,r.GetAllSchedule)
