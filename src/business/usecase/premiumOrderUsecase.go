@@ -32,9 +32,9 @@ func NewPremiumOrderUsecase(r repository.PremiumOrderRepository, auth auth.AuthI
 func (h *premiumOrderUsecase) UpgradePremium(userId uint, input entity.InputPremiumOrder)(interface{},int,error){
 	var price int
 	if input.Month==12{
-		price=35000
+		price=360000
 	}else if input.Month==1{
-		price=32000
+		price=40000
 	}else{
 		return "Premium package is not available",http.StatusBadRequest,errors.New("Premium package is not available")
 	}
